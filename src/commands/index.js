@@ -197,6 +197,7 @@ export default (editor, options = {}) => {
               <label for="nRows">Number of rows</label>
               <input type="number" class="form-control" value="`+ opts.model.props()['nRows'] +`" name="nRows" id="nRows" min="1">
             </div>
+            <div class="error" style="display: none;"></div>
           <div>
           <input id="table-button-create-new" type="button" value="Create Table" data-component-id="`+ opts.model.cid +`">
         `,

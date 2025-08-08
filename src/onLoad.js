@@ -30,15 +30,18 @@ export default (editor, options = {}) => {
         width: 23px;
         margin: 2px 3px;
       }
-      .new-table-form label { 
+      .new-table-form label {
         min-width: 160px;
         display: inline-block;
       }
-      .new-table-form .form-control { 
+      .new-table-form .form-control {
         padding: 3px 5px;
         margin-bottom: 10px;
       }
-      #table-button-create-new { 
+      .new-table-form .error {
+        color: red;
+      }
+      #table-button-create-new {
         margin-top:10px
       }
       .table-cell-highlight {

@@ -117,18 +117,40 @@ export function clearCellsWithSize(table) {
 }
 
 export function updateAttributesAndCloseModal (editor, componentId) {
-  let nRows = document.getElementById('nRows').value;
-  let nColumns = document.getElementById('nColumns').value;
+  const nRows = parseInt(document.getElementById('nRows').value);
+  const nColumns = parseInt(document.getElementById('nColumns').value);
+  const errorDiv = $('.new-table-form .error')
 
-  if (nRows && nColumns && nRows > 0 && nColumns > 0) {
-    let tableModel = getAllComponents(editor.getWrapper()).find(model => model.cid == componentId);
-    tableModel.props().nRows = nRows;
-    tableModel.props().nColumns = nColumns;
-    tableModel.createTable();
-  } else {
-    alert('Missing number of rows or number of columns.');
-    tableModel.remove();
+  const errors = []
+
+  if (!nColumns) {
+    errors.push('Missing number of columns.')
+  } else if (nColumns <= 0) {
+    errors.push('Number of columns has to be more then 0.')
   }
+
+  if (!nRows) {
+    errors.push('Missing number of rows.')
+  } else if (nRows <= 0) {
+    errors.push('Number of rows has to be more then 0.')
+  }
+
+  if (errors.length > 0) {
+    errorDiv.text(errors.join(' '))
+    errorDiv.slideDown()
+    return
+  }
+
+  const tableModel = getAllComponents(editor.getWrapper()).find(model => model.cid == componentId);
+  if (!tableModel) {
+    errorDiv.text('Table component was not found in the editor. Cannot create table.')
+    errorDiv.slideDown()
+    console.error('Table component was not found in the editor, expected component ID in editor: ', componentId);
+    return
+  }
+  tableModel.props().nRows = nRows;
+  tableModel.props().nColumns = nColumns;
+  tableModel.createTable();
   editor.Modal.close();
 }
 
