@@ -54,12 +54,12 @@ export default (domComponents, options) => {
         this.listenTo(this, 'change:nRows', this.rowsChanged);
         this.listenTo(this, 'change:hasHeaders', this.headerChanged);
       },
-      createTable(){
-        let calcWidth =  Number(this.props().nColumns) * 46
-        let setWidth = calcWidth < 900? calcWidth : 900;
-        let calcHeight = Number(this.props().nRows)*22
+      createTable() {
+        let calcWidth = Number(this.props().nColumns) * 46
+        let setWidth = calcWidth < 900 ? calcWidth : 900;
+        let calcHeight = Number(this.props().nRows) * 22
 
-        this.setStyle({width:  '100%'})
+        this.setStyle({ width: '100%', height: calcHeight + 'px' })
 
         let cells = [];
         let header = this.props().hasHeader;
@@ -70,7 +70,7 @@ export default (domComponents, options) => {
         for (let index = 0; index < this.props().nRows; index++) {
           this.components().add({ type: options.componentRow, components: cells }, { at: -1 });
         }
-        if(header) {
+        if (header) {
           for (let index = 0; index < this.props().nColumns; index++) {
             headers.push({ type: options.componentCellHeader });
           }
@@ -78,61 +78,61 @@ export default (domComponents, options) => {
         }
       },
       columnsChanged(selected, value, opts) {
-        if(this.columnCount() === value)
+        if (this.columnCount() === value)
           return
 
         const baseDifference = value - this.columnCount();
         const difference = Math.abs(value - this.columnCount())
-        if(baseDifference<0){
-          for(let i=0;i<difference; i++){
+        if (baseDifference < 0) {
+          for (let i = 0; i < difference; i++) {
             tblHelper.removeColumn(this, this.getLastColumnIndex())
           }
         } else {
-          for(let i=0;i<difference; i++){
+          for (let i = 0; i < difference; i++) {
             tblHelper.insertColumn(this, this.columnCount(), options.componentCell, options.componentCellHeader)
           }
         }
       },
       rowsChanged(selected, value, opts) {
-        if(this.rowCount() === value)
+        if (this.rowCount() === value)
           return
 
         const baseDifference = value - this.rowCount();
         const difference = Math.abs(value - this.rowCount())
-        if(baseDifference<0){
-          for(let i=0;i<difference; i++){
+        if (baseDifference < 0) {
+          for (let i = 0; i < difference; i++) {
             tblHelper.removeRow(this, this.getLastRowIndex())
           }
         } else {
-          for(let i=0;i<difference; i++){
+          for (let i = 0; i < difference; i++) {
             tblHelper.insertRow(this, this.rowCount(), options.componentRow, options.componentCell)
           }
         }
       },
       headerChanged(selected, value, opts) {
-        if(this.checkHeaderExists() != this.props().hasHeaders) {
+        if (this.checkHeaderExists() != this.props().hasHeaders) {
           tblHelper.toggleHeaderRow(this, options.componentRow, options.componentCellHeader)
         }
       },
-      checkHeaderExists(){
+      checkHeaderExists() {
         return this.components().at(0).components().at(0).is(options.componentCellHeader)
       },
-      hasChildren(){
+      hasChildren() {
         return this.components().length > 0
       },
-      rowCount(){
+      rowCount() {
         let rowCount = this.components().length
-        if(this.components().at(0).components().at(0).is(options.componentCellHeader))
+        if (this.components().at(0).components().at(0).is(options.componentCellHeader))
           rowCount--
         return rowCount
       },
-      columnCount(){
+      columnCount() {
         return this.components().at(0).components().length
       },
-      getLastRowIndex(){
+      getLastRowIndex() {
         return this.rowCount() - 1
       },
-      getLastColumnIndex(){
+      getLastColumnIndex() {
         return this.columnCount() - 1
       }
     },
