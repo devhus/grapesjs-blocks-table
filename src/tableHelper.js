@@ -138,7 +138,8 @@ export function updateAttributesAndCloseModal(editor, componentId) {
     console.error("GRAPESJS TABLE ERROR", errors);
     return
   }
-
+  console.log("components", getAllComponents(editor.getWrapper()));
+  console.log("componentId", componentId)
   const tableModel = getAllComponents(editor.getWrapper()).find(model => model.cid == componentId);
   if (!tableModel) {
     console.error("GRAPESJS TABLE ERROR", ['Table component was not found in the editor. Cannot create table.']);
