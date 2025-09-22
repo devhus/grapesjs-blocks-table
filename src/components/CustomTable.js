@@ -59,7 +59,7 @@ export default (domComponents, options) => {
         let setWidth = calcWidth < 900? calcWidth : 900;
         let calcHeight = Number(this.props().nRows)*22
 
-        this.setStyle({width:  setWidth + 'px', height: calcHeight + 'px'})
+        this.setStyle({width:  '100%'})
 
         let cells = [];
         let header = this.props().hasHeader;
