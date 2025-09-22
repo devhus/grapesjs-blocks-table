@@ -14,28 +14,28 @@ export const getCellToolbar = (editor) => {
 
 export const getTableToolbar = (component) => {
   const tb = component.get('toolbar');
-  let settingExists = tb.find(o=> o.command === 'open-traits-settings');
-  if(!settingExists) {
-    tb.push({ command: 'open-traits-settings', attributes: {class: 'fa fa-cog', title: 'Settings'} });
+  let settingExists = tb.find(o => o.command === 'open-traits-settings');
+  if (!settingExists) {
+    tb.push({ command: 'open-traits-settings', attributes: { class: 'fa fa-cog', title: 'Settings' } });
   }
   return tb;
 }
 
-export function insertColumn(tableComponent, addAtIndex, componentCell, componentCellHeader, updateProps = false){
+export function insertColumn(tableComponent, addAtIndex, componentCell, componentCellHeader, updateProps = false) {
   tableComponent.components().forEach((component, index) => {
-    if(index === 0 && tableComponent.props().hasHeaders) {
-      component.components().add({ type: componentCellHeader }, {at: addAtIndex});
+    if (index === 0 && tableComponent.props().hasHeaders) {
+      component.components().add({ type: componentCellHeader }, { at: addAtIndex });
     } else {
-      component.components().add({ type: componentCell }, {at: addAtIndex});
+      component.components().add({ type: componentCell }, { at: addAtIndex });
     }
   });
 
-  if(updateProps){
-    tableComponent.set({nColumns: Number(tableComponent.props().nColumns) + 1})
+  if (updateProps) {
+    tableComponent.set({ nColumns: Number(tableComponent.props().nColumns) + 1 })
   }
 }
 
-export function insertRow(tableComponent, addAtIndex, componentRow, componentCell, updateProps = false){
+export function insertRow(tableComponent, addAtIndex, componentRow, componentCell, updateProps = false) {
   const components = []
   tableComponent.components().at(0).components().models.forEach(model => {
     const colspan = model.getAttributes()['colspan'] ? model.getAttributes()['colspan'] : 1
@@ -45,8 +45,8 @@ export function insertRow(tableComponent, addAtIndex, componentRow, componentCel
   });
   tableComponent.components().add({ type: componentRow, components: components }, { at: addAtIndex });
 
-  if(updateProps){
-    tableComponent.set({nRows: Number(tableComponent.props().nRows) + 1})
+  if (updateProps) {
+    tableComponent.set({ nRows: Number(tableComponent.props().nRows) + 1 })
   }
 }
 
@@ -54,21 +54,21 @@ export function removeColumn(tableComponent, removeAtIndex, updateProps = false)
   tableComponent.components().forEach(component => {
     component.components().at(removeAtIndex).remove();
   });
-  if(updateProps){
-    tableComponent.set({nColumns: Number(tableComponent.props().nColumns) - 1})
+  if (updateProps) {
+    tableComponent.set({ nColumns: Number(tableComponent.props().nColumns) - 1 })
   }
 }
 
 export function removeRow(tableComponent, removeAtIndex, updateProps = false) {
   tableComponent.components().at(removeAtIndex).remove()
-  if(updateProps){
-    tableComponent.set({nRows: Number(tableComponent.props().nRows) - 1})
+  if (updateProps) {
+    tableComponent.set({ nRows: Number(tableComponent.props().nRows) - 1 })
   }
 }
 
-export function toggleHeaderRow(tableComponent, componentRow, componentCellHeader, updateProps = false){
-  let toggleOn = updateProps == false? tableComponent.props().hasHeaders: !tableComponent.props().hasHeaders;
-  if(toggleOn) {
+export function toggleHeaderRow(tableComponent, componentRow, componentCellHeader, updateProps = false) {
+  let toggleOn = updateProps == false ? tableComponent.props().hasHeaders : !tableComponent.props().hasHeaders;
+  if (toggleOn) {
     let headers = [];
     for (let index = 0; index < tableComponent.props().nColumns; index++) {
       headers.push({ type: componentCellHeader });
@@ -77,8 +77,8 @@ export function toggleHeaderRow(tableComponent, componentRow, componentCellHeade
   } else {
     tableComponent.components().at(0).remove()
   }
-  if(updateProps){
-    tableComponent.set({hasHeaders: toggleOn})
+  if (updateProps) {
+    tableComponent.set({ hasHeaders: toggleOn })
   }
 }
 
@@ -116,10 +116,9 @@ export function clearCellsWithSize(table) {
   });
 }
 
-export function updateAttributesAndCloseModal (editor, componentId) {
+export function updateAttributesAndCloseModal(editor, componentId) {
   const nRows = parseInt(document.getElementById('nRows').value);
   const nColumns = parseInt(document.getElementById('nColumns').value);
-  const errorDiv = $('.new-table-form .error')
 
   const errors = []
 
@@ -136,15 +135,13 @@ export function updateAttributesAndCloseModal (editor, componentId) {
   }
 
   if (errors.length > 0) {
-    errorDiv.text(errors.join(' '))
-    errorDiv.slideDown()
+    console.error("GRAPESJS TABLE ERROR", errors);
     return
   }
 
   const tableModel = getAllComponents(editor.getWrapper()).find(model => model.cid == componentId);
   if (!tableModel) {
-    errorDiv.text('Table component was not found in the editor. Cannot create table.')
-    errorDiv.slideDown()
+    console.error("GRAPESJS TABLE ERROR", ['Table component was not found in the editor. Cannot create table.']);
     console.error('Table component was not found in the editor, expected component ID in editor: ', componentId);
     return
   }
@@ -154,19 +151,19 @@ export function updateAttributesAndCloseModal (editor, componentId) {
   editor.Modal.close();
 }
 
-export function updateTableToolbarSubmenu (editor, submenuToShow, submenuToHide, componentCell, componentCellHeader) {
+export function updateTableToolbarSubmenu(editor, submenuToShow, submenuToHide, componentCell, componentCellHeader) {
   let selected = editor.getSelected();
-  let currentMenu = $('ul#toolbar-submenu-'+submenuToShow);
-  if(currentMenu.length > 0){
+  let currentMenu = $('ul#toolbar-submenu-' + submenuToShow);
+  if (currentMenu.length > 0) {
     $('.toolbar-submenu').slideUp('slow');
-    $('ul#toolbar-submenu-'+submenuToShow).slideDown('slow');
+    $('ul#toolbar-submenu-' + submenuToShow).slideDown('slow');
   } else {
     if (selected && (selected.is(componentCell) || selected.is(componentCellHeader))) {
       let rowComponent = selected.parent();
-      if ($('.' + submenuToHide + '-operations .toolbar-submenu').length > 0){
+      if ($('.' + submenuToHide + '-operations .toolbar-submenu').length > 0) {
         $('.' + submenuToHide + '-operations .toolbar-submenu').slideUp('slow');
       }
-      if ($('.' + submenuToShow + '-operations .toolbar-submenu').length > 0){
+      if ($('.' + submenuToShow + '-operations .toolbar-submenu').length > 0) {
         if ($('.' + submenuToShow + '-operations .toolbar-submenu').css('display') != 'none') {
           $('.' + submenuToShow + '-operations .toolbar-submenu').slideUp('slow');
           return;
@@ -179,8 +176,8 @@ export function updateTableToolbarSubmenu (editor, submenuToShow, submenuToHide,
           <ul id="toolbar-submenu-rows" class="toolbar-submenu ` + ($('.gjs-toolbar').position().left > 150 ? 'toolbar-submenu-right' : '') + `" style="display: none;">
             <li class="table-toolbar-submenu-run-command" data-command="table-insert-row-above" ` + (selected.is(componentCellHeader) ? 'style="display: none;"' : '') + `><i class="fa fa-chevron-up" aria-hidden="true"></i> Insert row above</li>
             <li class="table-toolbar-submenu-run-command" data-command="table-insert-row-below" ><i class="fa fa-chevron-down" aria-hidden="true"></i> Insert row below</li>
-            <li class="table-toolbar-submenu-run-command" data-command="table-delete-row" `+ (selected.is(componentCellHeader) ? 'style="display: none;"' : '') +` ><i class="fa fa-trash" aria-hidden="true"></i> Delete Row</li>
-            <li class="table-toolbar-submenu-run-command" data-command="table-toggle-header" `+ (selected.is(componentCell) ? 'style="display: none;"' : '') +`><i class="fa fa-trash" aria-hidden="true"></i> Remove Header</li>
+            <li class="table-toolbar-submenu-run-command" data-command="table-delete-row" `+ (selected.is(componentCellHeader) ? 'style="display: none;"' : '') + ` ><i class="fa fa-trash" aria-hidden="true"></i> Delete Row</li>
+            <li class="table-toolbar-submenu-run-command" data-command="table-toggle-header" `+ (selected.is(componentCell) ? 'style="display: none;"' : '') + `><i class="fa fa-trash" aria-hidden="true"></i> Remove Header</li>
             <li id="button-merge-cells-right" class="table-toolbar-submenu-run-command" data-command="table-merge-cells-right" ` + (selected.collection.indexOf(selected) + 1 == selected.parent().components().length ? 'style="display: none;"' : '') + `><i class="fa fa-arrows-h" aria-hidden="true"></i> Merge cell right</li>
           </ul>
           `;
@@ -198,7 +195,7 @@ export function updateTableToolbarSubmenu (editor, submenuToShow, submenuToHide,
         }
         $('.toolbar-submenu').slideUp('slow');
         $('.' + submenuToShow + '-operations').parent().append(htmlString);
-        $('ul#toolbar-submenu-'+submenuToShow).slideDown('slow');
+        $('ul#toolbar-submenu-' + submenuToShow).slideDown('slow');
       }
     }
   }
@@ -207,10 +204,10 @@ export function updateTableToolbarSubmenu (editor, submenuToShow, submenuToHide,
 export function refreshEditorSelected(editor) {
   let selected = editor.getSelected();
   editor.selectRemove(selected);
-  setTimeout(function() { editor.select(selected); }, 50);
+  setTimeout(function () { editor.select(selected); }, 50);
 }
 
-export function getAllComponents (model, result = []) {
+export function getAllComponents(model, result = []) {
   result.push(model);
   model.components().each(mod => getAllComponents(mod, result))
   return result;
