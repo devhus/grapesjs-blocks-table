@@ -1,3 +1,5 @@
+import $ from 'jquery';
+
 export const getCellToolbar = (editor) => {
   let toolbar = [
     { attributes: { class: 'column-actions columns-operations', title: 'Columns operations' }, command: 'table-show-columns-operations' },
@@ -138,11 +140,8 @@ export function updateAttributesAndCloseModal(editor, componentId) {
     console.error("GRAPESJS TABLE ERROR", errors);
     return
   }
-  console.log("components", getAllComponents(editor.getWrapper()));
-  console.log("componentId", componentId)
   const tableModel = getAllComponents(editor.getWrapper()).find(model => model.cid == componentId);
   if (!tableModel) {
-    console.error("GRAPESJS TABLE ERROR", ['Table component was not found in the editor. Cannot create table.']);
     console.error('Table component was not found in the editor, expected component ID in editor: ', componentId);
     return
   }
